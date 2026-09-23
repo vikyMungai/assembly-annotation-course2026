@@ -10,14 +10,19 @@
 #SBATCH --output=/data/users/vmungai/logs/assembly_annotation_course2026/output/output_%j.o
 #SBATCH --error=/data/users/vmungai/logs/assembly_annotation_course2026/error/error_%j.e
 
+# path for the fastp's container 
 CONTAINER="/containers/apptainer/fastp_0.23.2--h5f740d0_3.sif"
 
+# setting path of working directory and where the data is stored to give access to the container 
 WORKDIR="/data/users/vmungai/assembly-annotation-course2026"
 DATA_DIR="/data"
+# output directory 
 OUTDIR="${WORKDIR}/results/fastp"
+# Illumina and PacBio's reads 
 PACBIO_FASTQ="${WORKDIR}/data/raw_data/fastq_folder/Ice-1/ERR11437339.fastq.gz"
 RNAseq_FASTQ1="${WORKDIR}/data/raw_data/fastq_folder/RNAseq_Sha/ERR754081_1.fastq.gz"
 RNAseq_FASTQ2="${WORKDIR}/data/raw_data/fastq_folder/RNAseq_Sha/ERR754081_2.fastq.gz"
+# remove extension 
 SAMPLE_NAME1=`basename "${RNAseq_FASTQ1%.fastq.gz}"`
 SAMPLE_NAME2=`basename "${RNAseq_FASTQ2%.fastq.gz}"`
 SAMPLE_NAME_PACBIO=`basename "${PACBIO_FASTQ%.fastq.gz}"`
@@ -30,7 +35,7 @@ if [ ! -d $OUTDIR ]; then
     mkdir -p $OUTDIR
 fi 
 
-# trimming fastp the Illumina sequences  
+# trimming with fastp the Illumina sequences  
 apptainer exec --bind "$DATA_DIR" \
                 $CONTAINER fastp \
                 --detect_adapter_for_pe \
@@ -40,7 +45,7 @@ apptainer exec --bind "$DATA_DIR" \
                 --html "$OUTDIR/fastp.html" \
                 --thread $SLURM_CPUS_PER_TASK
 
-# run fastp get the total number of bases for the PacBio sequences  
+# run fastp to get the total number of bases for the PacBio sequences  
 apptainer exec --bind "$DATA_DIR" \
                 $CONTAINER fastp \
                 -i $PACBIO_FASTQ \
