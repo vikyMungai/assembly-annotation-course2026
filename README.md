@@ -109,3 +109,81 @@ ATG
 TAC
 ```
 The all reads TAC will be counted as ATG and not counted twice. 
+
+
+# Questions: reads & QC
+1. What are the read lengths of the different datasets?
+For Illumina the read length of the forward and reverse strand is 101
+For PacBio Hifi reads is 118-37335. The expected length is around 10kb and 20 kb 
+
+2. Are the dataset of good quality?
+The PacBio Hifi has a good quality as expected. While, the Illumina has a good quality at the beginning of the reads, but the quality get worse at the end of the reads. 
+
+# Questions: Perform k-mer counting
+
+Upload your histo file to the website, checkout the plots and answer the following questions:
+
+1. Is the estimated genome size expected?
+From the paper (https://www.nature.com/articles/s41588-024-01715-9) the assembly sizes of the 69 accessions ranged from 128 to 148 Mb, with an average length of 135 Mb. As my genome size is 126 is is quite a smaller genome. 
+
+2. Is the percentage of heterozygousity expected?
+The percentage of heterozygote is around 0, which is what we expect as they specie usually inbred. also the paper states "Sixty-nine accessions were confirmed to be inbred lines, but Lu-1, Pa-1 and Istisu-1 showed signs of heterozygosity and thus were removed from the subsequent analysis"
+
+3. Is the coverage expected?
+we aim for 30x coverage for assembly, higher it is better. 
+In my case I had 34,6x, which is okay. 
+
+4. Please add your results to following this table: DONE 
+
+5. Bonus: Why are we using canonical k-mers?
+In PacBio we sequenced double stranded DNA, so we have k-mers that belong to both strands and we cannot tell to which strand. However, we would like to consider every location of the genome once, no matter on which strand we happened to have landed.
+When we read the sequence ATCGAC that is an observation for that sequence and its reverse complement GTCGAT to exist in the genome. One appears when reading the genome in one direction and the other on its opposite, we could have sequenced any of them. So for the sake of completeness we should perform all analyses by considering this sequence ATCGAC/GTCGAT.
+To take into account the sequence only once, the canonical sequence of a k-mer pair is used. Only the lexicographically smaller of the two reverse complementary sequences is taken into account. In other words, the one that comes earliest in alphabetical order.
+
+
+# Step assembly 
+With hifiasm we have 836 contigs
+
+sum the lengths of the contigs and check that they sum up to the estimated genome size 
+
+# Questions: assembly 
+
+1. What is the difference between a contig and a scaffold?
+Contigs are derived from the term "contiguous" and represent continuous stretches of DNA sequences. These sequences consist of only four nucleotide bases: adenine (A), cytosine (C), guanine (G), and thymine (T), with no intervening gaps. Contigs are part of the scaffold, gaps separate the contigs in the scaffold.
+Scaffolds introduces a higher level of genome structure by linking contigs together. This linkage utilizes additional data about the relative position and orientation of contigs within the genome. The gaps between the contigs is indicated as epresented by a series of "N" letters, representing missing genomic information. 
+
+2. Why can repetitive sequences make genome assembly difficult? And why is long-read sequencing paricularly useful?
+Genome assembly is difficult when we have repetitive sequences because it is hard to understand where are they located, as the same sequence has different location. Long-read is partiuclar useful because it is easier to assemble the reads as the overlapping region would be larger. 
+
+3. What happens when sequencing coverage is very low? What about extremely high coverage?
+When the coverage is very low, we could have: 
+- missing reads that would create gaps in the genome 
+- the depth of coverage would be not enough to identify sequencing error
+
+In case of high coverage, there would be a large amount of data that requires a large amount of resources to do the assembly. 
+
+4. What is the role of error correction in an assembly workflow? Is it always necessary with PacBio HiFi reads?
+The role of error correction in an assembly workflow is to detect sequencung errors and differentiate them between different bases due to heterozygosity. 
+The error correction could be done before starting the k-mer composition, to simplify the assembly step. Otherwise can be done after the assembly to remove bubbles in the graph. In both cases short reads are used to check for sequencing reads. they are alinged to the reads to check for sequenicng error. 
+
+In case of PacBio Hifi the error connection it is usually not needed because they are high quality reads. Nevertheless, some assemblies do the error connection in case PacBio HiFi is not specified. 
+
+5. Why is it important to keep track of the exact command, software version and parameters used?
+it is importnat in order to make the analysis reproducible. This is also why it is suggested to used git repositories and containers. 
+
+6. If two students obtain different assemblies from the same reads, what technical reasons could explain this?
+They started with the same raw files, but different factors could lead to different assemblies. 
+- If the reads are not PacBio HiFi, maybe one trimmed the reads and the other not. 
+- They used different assemblies 
+- they used same assemblies but different version or parameters 
+- If the assembly has some stocastic variables or ranomisation (for example for the start node), the random seed could be different. 
+
+7. What is the fundamental difference between genome assembly and transcriptome assembly?
+Genome assembly sequence DNA and tries to assemble reads. The contigs' amount is similar, except for heterozygote samples. The genome assembly it is double stranded, we can have more than one haplotype in case of heterozygosity. 
+The Transcriptome assembly works with RNA reads. The contig's amount is not even, because the RNA transcript is not even as gene are expressed at different levels. The RNA is not double stranded. 
+
+8. Why can transcriptome assembly be more complicated than simply assembling all RNA reads into one sequence?
+The RNA trascriptome undergoes alternative splicing, so the trascriptomes could be different from each other. The k-mers from different trascripomes belonging to the same gene could have some parts that are in common but missing or additional regions due to alternative splacing. So, it is more complex than simply assembly all RNA reads. Also, sequencing errors cannot be identified by the frequency of that base in respect to other bases. 
+
+### comments 
+for hifiasm you should look at the "*.bp.p_utg.gfa" is the graph. this can be visualised with bondage and we can check that the contigs are correct. 
