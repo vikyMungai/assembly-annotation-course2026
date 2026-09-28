@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=64G
-#SBATCH --time=1-00:00:00
+#SBATCH --mem=100G
+#SBATCH --time=2-00:00:00
 #SBATCH --partition=pibu_el8
 #SBATCH --job-name=LJA_assembly
 #SBATCH --mail-user=vittoria.mungai@students.unibe.ch
