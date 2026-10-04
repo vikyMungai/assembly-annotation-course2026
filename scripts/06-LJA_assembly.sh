@@ -23,10 +23,10 @@ PACBIO_FASTQ="${WORKDIR}/data/raw_data/fastq_folder/Ice-1/ERR11437339.fastq.gz"
 
 
 # only if the directory does not exist it will be created 
-if [ ! -d $OUTDIR ]; then 
+if [ ! -d "$OUTDIR" ]; then 
     echo "directory ${OUTDIR} created"
     # option -p create the parents' folders if they do not exist
-    mkdir -p $OUTDIR
+    mkdir -p "$OUTDIR"
 fi 
 
 # assembly the PacBio reads with lja tool 

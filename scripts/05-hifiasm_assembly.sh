@@ -27,10 +27,10 @@ OUTPUT_FILE="${OUTDIR}/${PREFIX}"
 
 
 # only if the directory does not exist it will be created 
-if [ ! -d $OUTDIR ]; then 
+if [ ! -d "$OUTDIR" ]; then 
     echo "directory ${OUTDIR} created"
     # option -p create the parents' folders if they do not exist
-    mkdir -p $OUTDIR
+    mkdir -p "$OUTDIR"
 fi 
 
 # change of directory to save the results in the output file

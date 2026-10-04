@@ -28,8 +28,12 @@ the reads.histo has two columns
 - 2°: "how_many_k_mers have this multiplicity"
 
 the results of GenomeSPace are in http://genomescope.org/genomescope2.0/analysis.php?code=q0QLKrgFLfWVwCl4jxgU
-In GenomeScope I have changed the "max kmer coverage" to 4000
-look at the histagrams greated by GenomeSpace 
+In GenomeScope I have changed the "max kmer coverage" to 4000 and k-size 21
+
+a second analysis with k-mer size is 31 and "max kmer coverage" to 1000 http://genomescope.org/genomescope2.0/analysis.php?code=4TRrvWT6O1ZDgOUkd1du 
+look at the histagrams created by GenomeSpace 
+
+
 
 - the left plot does not show a second peak (this indicate that there is no heterozyosity). The low heterozygosity is due to the fact that it self ferlaise itself. 
 - the right histogram is for high multiplciity k-mers. The high peaks after the black peak are due to cloroplast 
@@ -142,9 +146,20 @@ To take into account the sequence only once, the canonical sequence of a k-mer p
 
 
 # Step assembly 
+
+### Hifiasm 
 With hifiasm we have 836 contigs
 
 sum the lengths of the contigs and check that they sum up to the estimated genome size 
+
+Hifiasm generates: 
+- bp.p_ctg.gfa = primary contig assembly → usually the one you use when you want one representative genome assembly.
+- bp.hap1.p_ctg.gfa = haplotype 1 assembly.
+- bp.hap2.p_ctg.gfa = haplotype 2 assembly.
+- *.noseq.gfa: contain graph structure without the actual sequence strings
+- *.lowQ.bed: describe regions flagged as low quality
+- *.p_utg.gfa and *.r_utg.gfa: are unitig-level graph outputs rather than the final primary-contig assembly
+
 
 # Questions: assembly 
 
@@ -185,5 +200,14 @@ The Transcriptome assembly works with RNA reads. The contig's amount is not even
 8. Why can transcriptome assembly be more complicated than simply assembling all RNA reads into one sequence?
 The RNA trascriptome undergoes alternative splicing, so the trascriptomes could be different from each other. The k-mers from different trascripomes belonging to the same gene could have some parts that are in common but missing or additional regions due to alternative splacing. So, it is more complex than simply assembly all RNA reads. Also, sequencing errors cannot be identified by the frequency of that base in respect to other bases. 
 
+# Questions: assembly evaluation 
+- How do your genome assemblies look according to your BUSCO results? Is one genome assembly better than the other?
+- How does your transcriptome assembly look? Are there many duplicated genes? Can you explain the differences with the whole genome assemblies?
+
 ### comments 
 for hifiasm you should look at the "*.bp.p_utg.gfa" is the graph. this can be visualised with bondage and we can check that the contigs are correct. 
+
+useful for interactive shell 
+```shell 
+srun --cpus-per-task=1 --mem-per-cpu=1G --time=02:00:00 --partition=pibu_el8 --pty bash
+```

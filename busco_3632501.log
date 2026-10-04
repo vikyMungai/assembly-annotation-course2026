@@ -1,0 +1,27 @@
+2026-10-04 11:46:15 DEBUG:busco.run_BUSCO	Command line: /usr/local/bin/busco -i /data/users/vmungai/assembly-annotation-course2026/results/assembly/trinity.Trinity.fasta --out_path /data/users/vmungai/assembly-annotation-course2026/results/assembly_evaluation/busco --out trinity_evaluation --mode transcriptome -l brassicales_odb10 --cpu 4
+2026-10-04 11:46:15 INFO:busco.run_BUSCO	***** Start a BUSCO v5.7.1 analysis, current time: 10/04/2026 11:46:15 *****
+2026-10-04 11:46:15 DEBUG:busco.ConfigManager	Getting config file
+2026-10-04 11:46:15 INFO:busco.ConfigManager	Configuring BUSCO with local environment
+2026-10-04 11:46:15 INFO:busco.BuscoConfig	Running transcriptome mode
+2026-10-04 11:46:15 ERROR:busco.BuscoRunner	A run with the name /data/users/vmungai/assembly-annotation-course2026/results/assembly_evaluation/busco/trinity_evaluation already exists...
+	If you are sure you wish to overwrite existing files, please use the -f (force) option
+2026-10-04 11:46:15 DEBUG:busco.BuscoRunner	A run with the name /data/users/vmungai/assembly-annotation-course2026/results/assembly_evaluation/busco/trinity_evaluation already exists...
+	If you are sure you wish to overwrite existing files, please use the -f (force) option
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/site-packages/busco/run_BUSCO.py", line 68, in run
+    self.load_config()
+  File "/usr/local/lib/python3.7/site-packages/busco/run_BUSCO.py", line 60, in load_config
+    self.config_manager.load_busco_config_main()
+  File "/usr/local/lib/python3.7/site-packages/busco/BuscoLogger.py", line 62, in wrapped_func
+    self.retval = func(*args, **kwargs)
+  File "/usr/local/lib/python3.7/site-packages/busco/ConfigManager.py", line 63, in load_busco_config_main
+    self.config_main.validate()
+  File "/usr/local/lib/python3.7/site-packages/busco/BuscoConfig.py", line 634, in validate
+    self._check_no_previous_run()
+  File "/usr/local/lib/python3.7/site-packages/busco/BuscoConfig.py", line 849, in _check_no_previous_run
+    "please use the -f (force) option".format(self.main_out)
+busco.Exceptions.BatchFatalError: A run with the name /data/users/vmungai/assembly-annotation-course2026/results/assembly_evaluation/busco/trinity_evaluation already exists...
+	If you are sure you wish to overwrite existing files, please use the -f (force) option
+2026-10-04 11:46:15 ERROR:busco.BuscoRunner	BUSCO analysis failed!
+2026-10-04 11:46:15 ERROR:busco.BuscoRunner	Check the logs, read the user guide (https://busco.ezlab.org/busco_userguide.html), and check the BUSCO issue board on https://gitlab.com/ezlab/busco/issues
+

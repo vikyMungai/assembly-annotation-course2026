@@ -25,10 +25,10 @@ RNAseq_FASTQ2="${WORKDIR}/data/raw_data/fastq_folder/RNAseq_Sha/ERR754081_2.fast
 
 
 # only if the directory does not exist it will be created 
-if [ ! -d $OUTDIR ]; then 
+if [ ! -d "$OUTDIR" ]; then 
     echo "directory ${OUTDIR} created"
     # option -p create the parents' folders if they do not exist
-    mkdir -p $OUTDIR
+    mkdir -p "$OUTDIR"
 fi 
 
 # executing the quality check on PacBio and Illumina's reads with fastqc using the container, are checked 
