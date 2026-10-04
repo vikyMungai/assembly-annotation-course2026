@@ -10,10 +10,10 @@
 #SBATCH --output=/data/users/vmungai/logs/assembly_annotation_course2026/output/output_%j.o
 #SBATCH --error=/data/users/vmungai/logs/assembly_annotation_course2026/error/error_%j.e
 
-# path for the jellyfish's container 
+# path to the Jellyfish container
 CONTAINER="/containers/apptainer/jellyfish-2.2.6--0.sif"
 
-# setting path of working directory and where the data is stored to give access to the container 
+# set the paths to the working directory and data directory
 WORKDIR="/data/users/vmungai/assembly-annotation-course2026"
 DATA_DIR="/data"
 # output directory and files 
@@ -24,14 +24,14 @@ OUT_HIST_JELLYFISH="${OUTDIR}/reads.histo"
 PACBIO_FASTQ="${WORKDIR}/data/raw_data/fastq_folder/Ice-1/ERR11437339.fastq.gz"
 
 
-# only if the directory does not exist it will be created 
+# create the output directory if it does not already exist
 if [ ! -d "$OUTDIR" ]; then 
     echo "directory ${OUTDIR} created"
-    # option -p create the parents' folders if they do not exist
+    # the -p option creates parent directories if they do not already exist
     mkdir -p "$OUTDIR"
 fi 
 
-# run jellyfish through its container 
+# count 21-mers in the PacBio reads using Jellyfish
 apptainer exec --bind "$DATA_DIR" $CONTAINER jellyfish count \
     -C -m 21 \
     -s 5G \
@@ -39,5 +39,6 @@ apptainer exec --bind "$DATA_DIR" $CONTAINER jellyfish count \
     -o $OUT_JELLYFISH \
     <(zcat $PACBIO_FASTQ) 
 
-# export the k-mer count histogram
-apptainer exec --bind "$DATA_DIR" $CONTAINER jellyfish histo -t $SLURM_CPUS_PER_TASK "$OUT_JELLYFISH" > "$OUT_HIST_JELLYFISH"
+# generate the k-mer count histogram
+apptainer exec --bind "$DATA_DIR" $CONTAINER jellyfish histo \
+    -t $SLURM_CPUS_PER_TASK "$OUT_JELLYFISH" > "$OUT_HIST_JELLYFISH"

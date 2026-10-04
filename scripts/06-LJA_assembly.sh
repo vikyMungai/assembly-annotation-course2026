@@ -10,10 +10,10 @@
 #SBATCH --output=/data/users/vmungai/logs/assembly_annotation_course2026/output/output_%j.o
 #SBATCH --error=/data/users/vmungai/logs/assembly_annotation_course2026/error/error_%j.e
 
-# path for the lja's container 
+# path to the LJA container
 CONTAINER="/containers/apptainer/lja-0.2.sif"
 
-# setting path of working directory and where the data is stored to give access to the container 
+# set the paths to the working directory and data directory
 WORKDIR="/data/users/vmungai/assembly-annotation-course2026"
 DATA_DIR="/data"
 # output directory 
@@ -22,13 +22,13 @@ OUTDIR="${WORKDIR}/results/assembly/lja"
 PACBIO_FASTQ="${WORKDIR}/data/raw_data/fastq_folder/Ice-1/ERR11437339.fastq.gz"
 
 
-# only if the directory does not exist it will be created 
+# create the output directory if it does not already exist
 if [ ! -d "$OUTDIR" ]; then 
     echo "directory ${OUTDIR} created"
-    # option -p create the parents' folders if they do not exist
+    # the -p option creates parent directories if they do not already exist
     mkdir -p "$OUTDIR"
 fi 
 
-# assembly the PacBio reads with lja tool 
+# assemble the PacBio HiFi reads using LJA
 apptainer exec --bind "$DATA_DIR" $CONTAINER lja \
     -o "$OUTDIR" -t $SLURM_CPUS_PER_TASK --reads "$PACBIO_FASTQ"

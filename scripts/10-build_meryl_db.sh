@@ -10,31 +10,30 @@
 #SBATCH --output=/data/users/vmungai/logs/assembly_annotation_course2026/output/output_%j.o
 #SBATCH --error=/data/users/vmungai/logs/assembly_annotation_course2026/error/error_%j.e
 
-
-# path for the merqury's container 
+# path to the Merqury container
 CONTAINER="/containers/apptainer/merqury_1.3.sif"
 
-# setting path of working directory and where the data is stored to give access to the container 
+# set the paths to the working directory and data directory
 WORKDIR="/data/users/vmungai/assembly-annotation-course2026"
 DATA_DIR="/data"
-# output directory for Meryl database 
+# output directory and Meryl database
 OUTDIR="${WORKDIR}/results/assembly_evaluation/merqury"
 MERYL_OUTPUT="${OUTDIR}/reads.meryl"
 
-# PacBio's reads 
+# PacBio HiFi reads
 PACBIO_FASTQ="${WORKDIR}/data/raw_data/fastq_folder/Ice-1/ERR11437339.fastq.gz"
-# k-mers' size, same used for GenomeScope  
+# k-mer size, using the same value as in the GenomeScope analysis
 K=31 
 
 
-# only if the directory does not exist it will be created 
+# create the output directory if it does not already exist
 if [ ! -d "$OUTDIR" ]; then 
     echo "directory ${OUTDIR} created"
-    # option -p create the parents' folders if they do not exist
+    # the -p option creates parent directories if they do not already exist
     mkdir -p "$OUTDIR"
 fi 
 
-# Build k-mer dbs with meryl
-# It takes the original unassembled reads and creates a database containing the k-mers and how many times each appears
+# build a k-mer database from the original PacBio HiFi reads using Meryl
+# the database stores each observed k-mer and its occurrence count
 apptainer exec --bind "$DATA_DIR" "$CONTAINER" meryl \
     k=$K cpus=$SLURM_CPUS_PER_TASK memory=50g  count "$PACBIO_FASTQ" output "$MERYL_OUTPUT"

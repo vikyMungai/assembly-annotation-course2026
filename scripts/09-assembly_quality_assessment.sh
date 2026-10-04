@@ -10,14 +10,13 @@
 #SBATCH --output=/data/users/vmungai/logs/assembly_annotation_course2026/output/output_%j.o
 #SBATCH --error=/data/users/vmungai/logs/assembly_annotation_course2026/error/error_%j.e
 
-
-# path for the quast's container 
+# path to the QUAST container
 CONTAINER="/containers/apptainer/quast_5.2.0.sif"
 
-# setting path of working directory and where the data is stored to give access to the container 
+# set the paths to the working directory and data directory
 WORKDIR="/data/users/vmungai/assembly-annotation-course2026"
 DATA_DIR="/data"
-# reference genome 
+# reference genome and annotation files
 REF_DIR="/data/courses/assembly-annotation-course/references"
 REF_FASTA="Arabidopsis_thaliana.TAIR10.dna.toplevel.fa"
 REF_FEATURES="TAIR10_GFF3_genes.gff"
@@ -26,25 +25,25 @@ OUTDIR="${WORKDIR}/results/assembly_evaluation/quast"
 QUAST_WITH_REF="${OUTDIR}/with_reference"
 QUAST_WITHOUT_REF="${OUTDIR}/without_reference"
 
-# assemblies absolute path 
+# absolute paths to the genome assemblies
 FLYE_ASSEMBLY="/data/users/vmungai/assembly-annotation-course2026/results/assembly/flye/assembly.fasta"
 HIFIASM_ASSEMBLY="/data/users/vmungai/assembly-annotation-course2026/results/assembly/hifiasm/ERR11437339.fa"
 LJA_ASSEMBLY="/data/users/vmungai/assembly-annotation-course2026/results/assembly/lja/assembly.fasta"
-# PacBio's reads 
+#  PacBio HiFi reads
 PACBIO_FASTQ="${WORKDIR}/data/raw_data/fastq_folder/Ice-1/ERR11437339.fastq.gz"
-# reference estimated size from Genome Scope 
+# estimated genome size obtained with GenomeScope
 REF_SIZE=126836787
 
 
-# only if the directory does not exist it will be created 
+# create the output directory if it does not already exist 
 if [ ! -d "$OUTDIR" ]; then 
     echo "directory ${OUTDIR} created"
-    # option -p create the parents' folders if they do not exist
+    # the -p option creates parent directories if they do not already exist
     mkdir -p "$OUTDIR"
 fi 
 
-# assembly evaluation with QUAST with reference genome 
-# the option --eukaryote could have been removed, as the option --large is used
+# evaluate the genome assemblies with QUAST using a reference genome
+# The --eukaryote option is redundant when --large is used
 apptainer exec --bind "$DATA_DIR" $CONTAINER quast.py \
     --eukaryote --large --labels "flye,hifiasm,lja" \
     -r "${REF_DIR}/${REF_FASTA}" --features "${REF_DIR}/${REF_FEATURES}" \
@@ -53,8 +52,8 @@ apptainer exec --bind "$DATA_DIR" $CONTAINER quast.py \
     --threads $SLURM_CPUS_PER_TASK "$FLYE_ASSEMBLY" "$HIFIASM_ASSEMBLY" "$LJA_ASSEMBLY"
 
 
-# assembly evaluation with QUAST without reference genome 
-# the option --eukaryote could have been removed, as the option --large is used
+# evaluate the genome assemblies with QUAST without using the reference genome
+# The --eukaryote option is redundant when --large is used
 apptainer exec --bind "$DATA_DIR" $CONTAINER quast.py \
     --eukaryote --large --labels "flye,hifiasm,lja" \
     --est-ref-size "$REF_SIZE" --pacbio "$PACBIO_FASTQ" --no-sv \

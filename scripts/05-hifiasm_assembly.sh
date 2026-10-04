@@ -10,35 +10,35 @@
 #SBATCH --output=/data/users/vmungai/logs/assembly_annotation_course2026/output/output_%j.o
 #SBATCH --error=/data/users/vmungai/logs/assembly_annotation_course2026/error/error_%j.e
 
-# path for the hifiasm's container 
+# path to the hifiasm container
 CONTAINER="/containers/apptainer/hifiasm_0.25.0.sif"
 
-# setting path of working directory and where the data is stored to give access to the container 
+# set the paths to the working directory and data directory
 WORKDIR="/data/users/vmungai/assembly-annotation-course2026"
 DATA_DIR="/data"
 # output directory 
 OUTDIR="${WORKDIR}/results/assembly/hifiasm"
 # PacBio's reads 
 PACBIO_FASTQ="${WORKDIR}/data/raw_data/fastq_folder/Ice-1/ERR11437339.fastq.gz"
-# remove extension
+# extract the sample name by removing the .fastq.gz extension
 PREFIX=`basename "${PACBIO_FASTQ%.fastq.gz}"`
-# output file basename, the extension will be add by hifiasm
+# output file basename, hifiasm will add the appropriate extensions
 OUTPUT_FILE="${OUTDIR}/${PREFIX}"
 
 
-# only if the directory does not exist it will be created 
+# create the output directory if it does not already exist
 if [ ! -d "$OUTDIR" ]; then 
     echo "directory ${OUTDIR} created"
-    # option -p create the parents' folders if they do not exist
+    # the -p option creates parent directories if they do not already exist
     mkdir -p "$OUTDIR"
 fi 
 
-# change of directory to save the results in the output file
+# change to the output directory so that the results are written there
 cd "$OUTDIR"
 
-# assembly the PacBio reads with hifiasm tool 
+# assemble the PacBio HiFi reads using hifiasm
 apptainer exec --bind "$DATA_DIR" $CONTAINER hifiasm \
     -o "$PREFIX" -t $SLURM_CPUS_PER_TASK "$PACBIO_FASTQ"
 
-
+# convert the primary contig GFA output to FASTA format
 awk '/^S/{print ">"$2;print $3}' ${OUTPUT_FILE}.bp.p_ctg.gfa > ${OUTPUT_FILE}.fa
