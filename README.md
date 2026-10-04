@@ -116,6 +116,12 @@ The following comparisons were performed:
 
 ## How to run the repository 
 After retrieving the data (see [Retrieved raw data](#1-retrieved-raw-data)), the Bash scripts in the `scripts` directory must be run in numerical order, as indicated by the `[0-9]{2}-*.sh` naming convention. Jobs that depend on outputs from previous steps should only be submitted after the required previous job has completed successfully.
+- `03-perform_k-mer_counting.sh` depends on `02-run_fastp.sh`
+- `07-trinity_assembly.sh` depends on `02-run_fastp.sh` 
+- `08-assembly_evaluation.sh` depends on `04-flye_assembly.sh`, `05-hifiasm_assembly.sh`, `06-LJA_assembly.sh` and `07-trinity_assembly.sh`
+- `09-assembly_quality_assessment.sh` depends on `04-flye_assembly.sh`, `05-hifiasm_assembly.sh` and `06-LJA_assembly.sh`
+- `11-run_merqury.sh` depends on `10-build_meryl_db.sh`, `04-flye_assembly.sh`, `05-hifiasm_assembly.sh` and `06-LJA_assembly.sh`
+- `13-mummerplot_compare_assemblies.sh` depends on `12-compare_assemblies.sh`, `04-flye_assembly.sh`, `05-hifiasm_assembly.sh` and `06-LJA_assembly.sh`
 
 The following commands must be executed from the repository root directory: 
 ```bash
