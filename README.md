@@ -87,6 +87,8 @@ ln -s /data/courses/assembly-annotation-course/raw_data/RNAseq_Sha .
 ### 3. K-mer counting 
 - `03-perform_k-mer_counting.sh`: Jellyfish was used to count k-mers and create a histogram.
 
+Afterwards the .histo output file was uploaded on http://genomescope.org/genomescope2.0/ with k-mer size 31 and max kmer coverage 1000 (results at this link http://genomescope.org/genomescope2.0/analysis.php?code=4TRrvWT6O1ZDgOUkd1du) 
+
 ### 4. Assembly 
 For whole-genome assembly, different tools were used:
 - Flye (`04-flye_assembly.sh`)
