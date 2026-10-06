@@ -2,11 +2,11 @@
 
 #SBATCH --cpus-per-task=32
 #SBATCH --mem=64G
-#SBATCH --time=24:00:00
+#SBATCH --time=08:00:00
 #SBATCH --partition=pibu_el8
 #SBATCH --job-name=merqury_quality_assessment
 #SBATCH --mail-user=vittoria.mungai@students.unibe.ch
-#SBATCH --mail-type=fail,end
+#SBATCH --mail-type=start,fail,end
 #SBATCH --output=/data/users/vmungai/logs/assembly_annotation_course2026/output/output_%j.o
 #SBATCH --error=/data/users/vmungai/logs/assembly_annotation_course2026/error/error_%j.e
 
