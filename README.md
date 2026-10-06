@@ -99,7 +99,7 @@ For whole-transcriptome assembly, Trinity was used (`07-trinity_assembly.sh`).
 
 ### 5. Assembly evaluation 
 The quality of the assemblies was evaluated with different tools: 
-- BUSCO (`08-assembly_evaluation.sh`)
+- BUSCO (`08-assembly_evaluation.sh`): it was used the same OrthoDB database "brassicales_odb10" as it was used in the paper  
 - QUAST (`09-assembly_quality_assessment.sh`)
 - Merqury (`10-build_meryl_db.sh`, `11-run_merqury.sh`)
 

@@ -36,4 +36,4 @@ fi
 # build a k-mer database from the original PacBio HiFi reads using Meryl
 # the database stores each observed k-mer and its occurrence count
 apptainer exec --bind "$DATA_DIR" "$CONTAINER" meryl \
-    k=$K cpus=$SLURM_CPUS_PER_TASK memory=50g  count "$PACBIO_FASTQ" output "$MERYL_OUTPUT"
+    k=$K threads=$SLURM_CPUS_PER_TASK memory=50  count "$PACBIO_FASTQ" output "$MERYL_OUTPUT"
