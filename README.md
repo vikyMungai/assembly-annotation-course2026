@@ -27,32 +27,32 @@ After running all the scripts, this will be the structure of the repository
 │   │   └── trinity.Trinity.fasta.gene_trans_map
 │   │
 │   ├── assembly_evaluation/
-│   │   ├── busco/                             # BUSCO completeness assessment
-│   │   ├── quast/                             # QUAST assembly statistics
-│   │   └── merqury/                           # Merqury k-mer based evaluation
+│   │   ├── busco/                                  # BUSCO completeness assessment
+│   │   ├── quast/                                  # QUAST assembly statistics
+│   │   └── merqury/                                # Merqury k-mer based evaluation
 │   │
 │   ├── assembly_comparison/
-│   │   ├── nucmer/                            # Nucmer alignment results
-│   │   └── mummerplot/                        # Dot plots from Nucmer alignments
+│   │   ├── nucmer/                                 # Nucmer alignment results
+│   │   └── mummerplot/                             # Dot plots from Nucmer alignments
 │   │
-│   ├── fastp/                                 # Read preprocessing results
-│   ├── k_mer_counting/                        # K-mer analysis
-│   └── reads_QC/                              # Raw-read quality control
+│   ├── fastp/                                      # Read preprocessing results
+│   ├── k_mer_counting/                             # K-mer analysis
+│   └── reads_QC/                                   # Raw-read quality control
 │
 └── scripts/
-    ├── 01-run_fastqc.sh                       # Quality control with FastQC
-    ├── 02-run_fastp.sh                        # Read preprocessing with fastp
-    ├── 03-perform_k-mer_counting.sh           # K-mer counting
-    ├── 04-flye_assembly.sh                    # Flye genome assembly
-    ├── 05-hifiasm_assembly.sh                 # Hifiasm genome assembly
-    ├── 06-LJA_assembly.sh                     # LJA genome assembly
-    ├── 07-trinity_assembly.sh                 # Trinity transcriptome assembly
-    ├── 08-assembly_evaluation.sh              # BUSCO assembly evaluation
-    ├── 09-assembly_quality_assessment.sh      # QUAST assembly evaluation
-    ├── 10-build_meryl_db.sh                   # Build Meryl k-mer database
-    ├── 11-run_merqury.sh                      # Merqury assembly evaluation
-    ├── 12-compare_assemblies.sh               # Nucmer assembly comparisons
-    └── 13-mummerplot_compare_assemblies.sh    # Generate comparison dot plots
+    ├── 01-run_fastqc.sh                            # Quality control with FastQC
+    ├── 02-run_fastp.sh                             # Read preprocessing with fastp
+    ├── 03-perform_k-mer_counting.sh                # K-mer counting
+    ├── 04-flye_assembly.sh                         # Flye genome assembly
+    ├── 05-hifiasm_assembly.sh                      # Hifiasm genome assembly
+    ├── 06-LJA_assembly.sh                          # LJA genome assembly
+    ├── 07-trinity_assembly.sh                      # Trinity transcriptome assembly
+    ├── 08-run_busco_assembly_evaluation.sh         # BUSCO assembly evaluation
+    ├── 09-run_quast_assembly_quality_assessment.sh # QUAST assembly evaluation
+    ├── 10-build_meryl_db.sh                        # Build Meryl k-mer database
+    ├── 11-run_merqury.sh                           # Merqury assembly evaluation
+    ├── 12-compare_assemblies.sh                    # Nucmer assembly comparisons
+    └── 13-mummerplot_compare_assemblies.sh         # Generate comparison dot plots
 ```
 
 ## Project workflow 
@@ -99,8 +99,8 @@ For whole-transcriptome assembly, Trinity was used (`07-trinity_assembly.sh`).
 
 ### 5. Assembly evaluation 
 The quality of the assemblies was evaluated with different tools: 
-- BUSCO (`08-assembly_evaluation.sh`): it was used the same OrthoDB database "brassicales_odb10" as it was used in the paper  
-- QUAST (`09-assembly_quality_assessment.sh`)
+- BUSCO (`08-run_busco_assembly_evaluation.sh`): it was used the same OrthoDB database "brassicales_odb10" as it was used in the paper  
+- QUAST (`09-run_quast_assembly_quality_assessment.sh`)
 - Merqury (`10-build_meryl_db.sh`, `11-run_merqury.sh`)
 
 ### 6. Assembly comparison 
@@ -120,8 +120,8 @@ The following comparisons were performed:
 After retrieving the data (see [Retrieved raw data](#1-retrieved-raw-data)), the Bash scripts in the `scripts` directory must be run in numerical order, as indicated by the `[0-9]{2}-*.sh` naming convention. Jobs that depend on outputs from previous steps should only be submitted after the required previous job has completed successfully.
 - `03-perform_k-mer_counting.sh` depends on `02-run_fastp.sh`
 - `07-trinity_assembly.sh` depends on `02-run_fastp.sh` 
-- `08-assembly_evaluation.sh` depends on `04-flye_assembly.sh`, `05-hifiasm_assembly.sh`, `06-LJA_assembly.sh` and `07-trinity_assembly.sh`
-- `09-assembly_quality_assessment.sh` depends on `04-flye_assembly.sh`, `05-hifiasm_assembly.sh` and `06-LJA_assembly.sh`
+- `08-run_busco_assembly_evaluation.sh` depends on `04-flye_assembly.sh`, `05-hifiasm_assembly.sh`, `06-LJA_assembly.sh` and `07-trinity_assembly.sh`
+- `09-run_quast_assembly_quality_assessment.sh` depends on `04-flye_assembly.sh`, `05-hifiasm_assembly.sh` and `06-LJA_assembly.sh`
 - `11-run_merqury.sh` depends on `10-build_meryl_db.sh`, `04-flye_assembly.sh`, `05-hifiasm_assembly.sh` and `06-LJA_assembly.sh`
 - `13-mummerplot_compare_assemblies.sh` depends on `12-compare_assemblies.sh`, `04-flye_assembly.sh`, `05-hifiasm_assembly.sh` and `06-LJA_assembly.sh`
 
@@ -134,8 +134,8 @@ sbatch scripts/04-flye_assembly.sh
 sbatch scripts/05-hifiasm_assembly.sh        
 sbatch scripts/06-LJA_assembly.sh    
 sbatch scripts/07-trinity_assembly.sh   
-sbatch scripts/08-assembly_evaluation.sh                
-sbatch scripts/09-assembly_quality_assessment.sh
+sbatch scripts/08-run_busco_assembly_evaluation.sh                
+sbatch scripts/09-run_quast_assembly_quality_assessment.sh
 sbatch scripts/10-build_meryl_db.sh
 sbatch scripts/11-run_merqury.sh
 sbatch scripts/12-compare_assemblies.sh
